@@ -45,6 +45,6 @@ class RecipeMain(BaseModel):
         title='Recipe complexity',
         description='Choose the complexity of the recipe'
     )
-    ingredients: List[Ingredient]
+    ingredients: Optional[List[Ingredient]]
     steps: Optional[List[CookingStep]] = Field(
         default=None, title='Steps of cooking')

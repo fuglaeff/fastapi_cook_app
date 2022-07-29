@@ -1,39 +1,27 @@
 from datetime import timedelta
+import databases
 
 from fastapi import APIRouter
 
-from .schemas import RecipeMain
+from recipies.crud import read_recipe_by_id
+
+from recipies.schemas import RecipeMain
 
 router = APIRouter()
 
-fake_recipies = {
-    1: {
-        'id': 1,
-        'name': 'Sandwich',
-        'description': 'Fast and tasty breakfast',
-        'cooking_time': timedelta(minutes=5),
-        'ingredients': [
-            {
-                'name': 'Bread'
-            },
-            {
-                'name': 'Cheese'
-            },
-            {
-                'name': 'Ham'
-            },
-            {
-                'name': 'Cucumber'
-            },
-            {
-                'name': 'Tomato'
-            },
-        ],
-        'steps': None,
-        },
-}
+database = databases.Database('sqlite:///fast_api_app.db')
+
+
+@router.on_event("startup")
+async def startup():
+    await database.connect()
+
+
+@router.on_event("shutdown")
+async def shutdown():
+    await database.disconnect()
 
 
 @router.get('/recipies/{id}', tags=['recipe'], response_model=RecipeMain)
-def take_recipe(id: int):
-    return fake_recipies[id]
+async def take_recipe(id: int):
+    return await read_recipe_by_id(id)
