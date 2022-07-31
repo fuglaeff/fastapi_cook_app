@@ -25,8 +25,7 @@ class CookingStep(BaseModel):
     timing: timedelta
 
 
-class RecipeMain(BaseModel):
-    id: int
+class Recipe(BaseModel):
     name: str = Field(
         title='Recipe name',
         description='Give name for your recipe',
@@ -45,6 +44,14 @@ class RecipeMain(BaseModel):
         title='Recipe complexity',
         description='Choose the complexity of the recipe'
     )
+
+
+class RecipeMain(Recipe):
+    id: int
+
+
+class RecipeDetail(RecipeMain):
+    id: int
     ingredients: Optional[List[Ingredient]]
     steps: Optional[List[CookingStep]] = Field(
         default=None, title='Steps of cooking')

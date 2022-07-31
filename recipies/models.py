@@ -1,12 +1,10 @@
 from sqlalchemy import (Column, Enum, Float, ForeignKey, Integer, Interval,
-                        String, Table, create_engine)
-from sqlalchemy.orm import declarative_base, relationship
+                        String, Table)
+from sqlalchemy.orm import relationship
 
-from recipies.schemas import Rating
+from schemas import Rating
 
-engine = create_engine('sqlite:///fast_api_app.db', echo=False)
-
-Base = declarative_base()
+from ..db import Base, engine
 
 recipe_ingredients = Table(
     'recipe_ingredients',
@@ -27,7 +25,7 @@ class RecipeSQL(Base):
     description = Column(String(300))
     cooking_time = Column(Interval)
     prepariring_time = Column(Interval)
-    cooking_level = Column(Enum(Rating))
+    recipe_level = Column(Enum(Rating))
     steps = relationship('StepSQL')
     ingredients = relationship('IngredientSQL', secondary=recipe_ingredients)
 
